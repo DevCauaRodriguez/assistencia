@@ -214,7 +214,7 @@ const Dashboard = () => {
             <div className="bg-red-600 px-6 py-4 flex items-center justify-between">
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
                 <AlertCircle size={24} />
-                Chamados com Atraso no SLA
+                Chamados de Assistência com Atraso
               </h2>
               <span className="bg-white text-red-600 font-bold px-3 py-1 rounded-full text-sm">
                 {chamadosAtrasados.length} {chamadosAtrasados.length === 1 ? 'Atrasado' : 'Atrasados'}

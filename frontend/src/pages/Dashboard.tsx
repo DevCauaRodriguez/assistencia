@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Layout from '../components/Layout';
 import api from '../lib/api';
 import { TrendingUp, Users, Building2, Car, Clock, X, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
@@ -58,6 +58,7 @@ interface ChamadoAtrasado {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [empresas, setEmpresas] = useState<Empresa[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,14 +73,9 @@ const Dashboard = () => {
   });
   const [periodoGrafico, setPeriodoGrafico] = useState<'mes' | 'trimestre' | 'semestre' | 'ano'>('mes');
   const [mesAtual, setMesAtual] = useState(new Date());
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  useEffect(() => {
-    loadMetrics();
-    loadEmpresas();
-    loadChamadosAtrasados();
-  }, [periodoGrafico, mesAtual]);
-
-  const loadMetrics = async () => {
+  const loadMetrics = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         periodo: periodoGrafico,
@@ -92,9 +88,9 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [periodoGrafico, mesAtual]);
 
-  const loadEmpresas = async () => {
+  const loadEmpresas = useCallback(async () => {
     try {
       const response = await api.get('/empresas');
       const empresasAtivas = response.data.filter((e: Empresa) => e.ativo);
@@ -102,16 +98,72 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Erro ao carregar empresas:', error);
     }
-  };
+  }, []);
 
-  const loadChamadosAtrasados = async () => {
+  const loadChamadosAtrasados = useCallback(async () => {
     try {
       const response = await api.get('/dashboard/chamados-atrasados');
       setChamadosAtrasados(response.data);
     } catch (error) {
       console.error('Erro ao carregar chamados atrasados:', error);
     }
-  };
+  }, []);
+
+  const refreshDashboardData = useCallback(async () => {
+    if (isRefreshing) return;
+    
+    setIsRefreshing(true);
+    try {
+      await Promise.all([
+        loadChamadosAtrasados(),
+        loadMetrics()
+      ]);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [isRefreshing, loadChamadosAtrasados, loadMetrics]);
+
+  useEffect(() => {
+    loadMetrics();
+    loadEmpresas();
+    loadChamadosAtrasados();
+  }, [loadMetrics, loadEmpresas, loadChamadosAtrasados]);
+
+  // Effect para recarregar dados quando voltar ao dashboard
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && location.pathname === '/') {
+        refreshDashboardData();
+      }
+    };
+
+    const handleFocus = () => {
+      if (location.pathname === '/') {
+        refreshDashboardData();
+      }
+    };
+
+    // Recarrega dados quando a página fica visível novamente
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [location.pathname, refreshDashboardData]);
+
+  // Effect específico para detectar quando volta ao dashboard
+  useEffect(() => {
+    if (location.pathname === '/') {
+      // Pequeno delay para garantir que a navegação foi completada
+      const timeoutId = setTimeout(() => {
+        refreshDashboardData();
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [location.pathname, refreshDashboardData]);
 
   const loadChamadosFinalizados = async () => {
     try {

@@ -107,7 +107,6 @@ const ChamadoDetalhes = () => {
   const [comentarios, setComentarios] = useState<Comentario[]>([]);
   const [historico, setHistorico] = useState<Historico[]>([]);
   const [novoComentario, setNovoComentario] = useState('');
-  const [novoStatus, setNovoStatus] = useState('');
   const [usuarios, setUsuarios] = useState<Array<{id: number; nome: string}>>([]);
   const [tecnicoSelecionado, setTecnicoSelecionado] = useState<number | string>('');
   const [etapas, setEtapas] = useState<EtapaGuidoReboque[]>([]);
@@ -130,7 +129,6 @@ const ChamadoDetalhes = () => {
     try {
       const response = await api.get(`/chamados/${id}`);
       setChamado(response.data);
-      setNovoStatus(response.data.status);
       setTecnicoSelecionado(response.data.tecnico_responsavel_id || '');
     } catch (error) {
       console.error('Erro ao carregar chamado:', error);
@@ -341,16 +339,6 @@ const ChamadoDetalhes = () => {
       loadComentarios();
     } catch (error) {
       console.error('Erro ao adicionar comentário:', error);
-    }
-  };
-
-  const handleUpdateStatus = async () => {
-    try {
-      await api.patch(`/chamados/${id}/status`, { status: novoStatus });
-      loadChamado();
-      loadHistorico();
-    } catch (error) {
-      console.error('Erro ao atualizar status:', error);
     }
   };
 
@@ -736,31 +724,6 @@ const ChamadoDetalhes = () => {
                 <div className="text-gray-900 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">{chamado.observacoes}</div>
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Atualizar Status */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="font-bold text-gray-900 mb-4">Atualizar Status</h3>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <select
-              value={novoStatus}
-              onChange={(e) => setNovoStatus(e.target.value)}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="aberto">Aberto</option>
-              <option value="em_andamento">Em Andamento</option>
-              <option value="aguardando_cliente">Aguardando Cliente</option>
-              <option value="parado">Parado</option>
-              <option value="cancelado">Cancelado</option>
-              <option value="finalizado">Finalizado</option>
-            </select>
-            <button
-              onClick={handleUpdateStatus}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-            >
-              Atualizar
-            </button>
           </div>
         </div>
 

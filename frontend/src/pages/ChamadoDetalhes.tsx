@@ -234,14 +234,31 @@ const ChamadoDetalhes = () => {
 
   const handleAvancarEtapa = async (etapa_numero: number) => {
     // Validação: Etapa 2 requer protocolo da seguradora
-    if (etapa_numero === 2 && !protocoloSeguradora) {
-      alert('❌ Atenção: É obrigatório preencher o Protocolo da Seguradora antes de avançar para a próxima etapa.');
+    if (etapa_numero === 2 && (!protocoloSeguradora || protocoloSeguradora.trim() === '')) {
+      alert('❌ ERRO: O Protocolo da Seguradora é obrigatório para avançar da Etapa 2.\nPor favor, preencha o protocolo antes de continuar.');
+      // Focar no campo de input se existir
+      const protocoloInput = document.querySelector('input[placeholder="Digite o protocolo..."]') as HTMLInputElement;
+      if (protocoloInput) {
+        protocoloInput.focus();
+        protocoloInput.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+        setTimeout(() => {
+          protocoloInput.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
+        }, 3000);
+      }
       return;
     }
 
     // Validação: Etapa 6 requer tempo de deslocamento
-    if (etapa_numero === 6 && !tempoDeslocamento) {
-      alert('❌ Atenção: É obrigatório definir o tempo estimado de deslocamento antes de avançar para a próxima etapa.');
+    if (etapa_numero === 6 && (!tempoDeslocamento || tempoDeslocamento.trim() === '')) {
+      alert('❌ ERRO: O tempo estimado de deslocamento é obrigatório para avançar da Etapa 6.\nPor favor, defina o tempo antes de continuar.');
+      const tempoInput = document.querySelector('input[placeholder="Ex: 45"]') as HTMLInputElement;
+      if (tempoInput) {
+        tempoInput.focus();
+        tempoInput.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+        setTimeout(() => {
+          tempoInput.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
+        }, 3000);
+      }
       return;
     }
 
@@ -849,23 +866,41 @@ const ChamadoDetalhes = () => {
                         {etapa.etapa_numero === 2 && isEmAndamento && (
                           <div className="mt-4 p-4 bg-white rounded-lg border border-blue-200">
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                              Protocolo da Seguradora *
+                              <span className="text-red-500">*</span> Protocolo da Seguradora (Obrigatório)
                             </label>
+                            <p className="text-xs text-gray-600 mb-3">
+                              ⚠️ Este campo é obrigatório para avançar para a próxima etapa
+                            </p>
                             <div className="flex gap-2">
                               <input
                                 type="text"
                                 value={protocoloSeguradora}
                                 onChange={(e) => setProtocoloSeguradora(e.target.value)}
-                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                                className={`flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+                                  protocoloSeguradora.trim() === '' 
+                                    ? 'border-red-300 focus:ring-red-200 focus:border-red-500' 
+                                    : 'border-gray-300 focus:ring-blue-200 focus:border-blue-500'
+                                }`}
                                 placeholder="Digite o protocolo..."
+                                required
                               />
                               <button
                                 onClick={handleAtualizarProtocolo}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-semibold"
+                                disabled={!protocoloSeguradora.trim()}
+                                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                                  protocoloSeguradora.trim()
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                }`}
                               >
                                 Salvar
                               </button>
                             </div>
+                            {protocoloSeguradora.trim() === '' && (
+                              <p className="text-xs text-red-600 mt-2 flex items-center gap-1">
+
+                              </p>
+                            )}
                           </div>
                         )}
 
@@ -928,12 +963,27 @@ const ChamadoDetalhes = () => {
 
                       {/* Botão avançar */}
                       {isEmAndamento && etapa.etapa_numero < 7 && (
-                        <button
-                          onClick={() => handleAvancarEtapa(etapa.etapa_numero)}
-                          className="ml-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold text-sm"
-                        >
-                          Avançar Etapa
-                        </button>
+                        <div className="ml-4">
+                          <button
+                            onClick={() => handleAvancarEtapa(etapa.etapa_numero)}
+                            disabled={etapa.etapa_numero === 2 && !protocoloSeguradora.trim()}
+                            className={`px-4 py-2 rounded-lg transition-colors font-semibold text-sm ${
+                              etapa.etapa_numero === 2 && !protocoloSeguradora.trim()
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-green-600 text-white hover:bg-green-700'
+                            }`}
+                            title={etapa.etapa_numero === 2 && !protocoloSeguradora.trim() 
+                              ? 'Preencha o protocolo da seguradora para avançar' 
+                              : 'Avançar para a próxima etapa'}
+                          >
+                            Avançar Etapa
+                          </button>
+                          {etapa.etapa_numero === 2 && !protocoloSeguradora.trim() && (
+                            <p className="text-xs text-red-600 mt-1 max-w-32">
+                              Protocolo obrigatório
+                            </p>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>

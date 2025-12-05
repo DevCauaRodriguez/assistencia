@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
+import Alert from '../components/Alert';
+import ConfirmDialog from '../components/ConfirmDialog';
 import api from '../lib/api';
 import { ArrowLeft, Clock, User, Calendar, CheckCircle, AlertCircle, Paperclip, Download, Eye, Trash2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useAlert } from '../hooks/useAlert';
+import { useConfirm } from '../hooks/useConfirm';
 
 interface Chamado {
   id: number;
@@ -103,6 +107,8 @@ const ChamadoDetalhes = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { alert, showSuccess, showError, showWarning, closeAlert } = useAlert();
+  const { confirmState, confirm, handleConfirm, handleCancel } = useConfirm();
   const [chamado, setChamado] = useState<Chamado | null>(null);
   const [comentarios, setComentarios] = useState<Comentario[]>([]);
   const [historico, setHistorico] = useState<Historico[]>([]);
@@ -113,6 +119,7 @@ const ChamadoDetalhes = () => {
   const [protocoloSeguradora, setProtocoloSeguradora] = useState('');
   const [tempoDeslocamento, setTempoDeslocamento] = useState('');
   const [observacaoEtapa3, setObservacaoEtapa3] = useState('');
+  const [observacaoFinal, setObservacaoFinal] = useState('');
   const [anexos, setAnexos] = useState<Anexo[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -198,19 +205,24 @@ const ChamadoDetalhes = () => {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Erro ao baixar anexo:', error);
-      alert('Erro ao baixar arquivo');
+      showError('Erro ao baixar arquivo', 'Tente novamente ou contate o suporte.');
     }
   };
 
   const handleDeleteAnexo = async (anexoId: number) => {
-    if (!confirm('Deseja realmente excluir este anexo?')) return;
+    const confirmacao = await confirm(
+      'Confirmar exclusão',
+      'Deseja realmente excluir este anexo?\n\nEsta ação não pode ser desfeita.',
+      'danger'
+    );
+    if (!confirmacao) return;
     
     try {
       await api.delete(`/anexos/${anexoId}`);
       loadAnexos();
     } catch (error) {
       console.error('Erro ao deletar anexo:', error);
-      alert('Erro ao deletar anexo');
+      showError('Erro ao deletar anexo', 'Tente novamente ou contate o suporte.');
     }
   };
 
@@ -233,7 +245,10 @@ const ChamadoDetalhes = () => {
   const handleAvancarEtapa = async (etapa_numero: number) => {
     // Validação: Etapa 2 requer protocolo da seguradora
     if (etapa_numero === 2 && (!protocoloSeguradora || protocoloSeguradora.trim() === '')) {
-      alert('❌ ERRO: O Protocolo da Seguradora é obrigatório para avançar da Etapa 2.\nPor favor, preencha o protocolo antes de continuar.');
+      showError(
+        'Protocolo obrigatório',
+        'O Protocolo da Seguradora é obrigatório para avançar da Etapa 2.\nPor favor, preencha o protocolo antes de continuar.'
+      );
       // Focar no campo de input se existir
       const protocoloInput = document.querySelector('input[placeholder="Digite o protocolo..."]') as HTMLInputElement;
       if (protocoloInput) {
@@ -248,7 +263,10 @@ const ChamadoDetalhes = () => {
 
     // Validação: Etapa 6 requer tempo de deslocamento
     if (etapa_numero === 6 && (!tempoDeslocamento || tempoDeslocamento.trim() === '')) {
-      alert('❌ ERRO: O tempo estimado de deslocamento é obrigatório para avançar da Etapa 6.\nPor favor, defina o tempo antes de continuar.');
+      showError(
+        'Tempo obrigatório',
+        'O tempo estimado de deslocamento é obrigatório para avançar da Etapa 6.\nPor favor, defina o tempo antes de continuar.'
+      );
       const tempoInput = document.querySelector('input[placeholder="Ex: 45"]') as HTMLInputElement;
       if (tempoInput) {
         tempoInput.focus();
@@ -275,13 +293,13 @@ const ChamadoDetalhes = () => {
       if (etapa_numero === 6) setTempoDeslocamento('');
     } catch (error) {
       console.error('Erro ao avançar etapa:', error);
-      alert('Erro ao avançar etapa');
+      showError('Erro ao avançar etapa', 'Tente novamente ou contate o suporte.');
     }
   };
 
   const handleAtualizarProtocolo = async () => {
     if (!protocoloSeguradora) {
-      alert('Preencha o protocolo da seguradora');
+      showWarning('Campo obrigatório', 'Preencha o protocolo da seguradora antes de continuar.');
       return;
     }
     try {
@@ -298,7 +316,7 @@ const ChamadoDetalhes = () => {
 
   const handleAtualizarTempoDeslocamento = async () => {
     if (!tempoDeslocamento) {
-      alert('Preencha o tempo de deslocamento');
+      showWarning('Campo obrigatório', 'Preencha o tempo de deslocamento antes de continuar.');
       return;
     }
     try {
@@ -314,7 +332,7 @@ const ChamadoDetalhes = () => {
 
   const handleAtualizarEtapa3 = async () => {
     if (!observacaoEtapa3) {
-      alert('Preencha a observação');
+      showWarning('Campo obrigatório', 'Preencha a observação antes de continuar.');
       return;
     }
     try {
@@ -323,9 +341,35 @@ const ChamadoDetalhes = () => {
       });
       loadEtapas();
       setObservacaoEtapa3('');
-      alert('Atualização registrada! Prazo renovado por 15 minutos.');
+      showSuccess('Atualização registrada!', 'Prazo renovado por 15 minutos.');
     } catch (error) {
       console.error('Erro ao atualizar etapa 3:', error);
+    }
+  };
+
+  const handleFinalizarChamado = async () => {
+    const confirmacao = await confirm(
+      '🎉 Finalizar Chamado de Assistência',
+      'Você está prestes a finalizar este chamado de assistência.\n\nEsta ação irá:\n✅ Marcar o chamado como FINALIZADO\n✅ Concluir a última etapa do processo\n✅ Registrar a data/hora de conclusão\n\nDeseja continuar?',
+      'success'
+    );
+    
+    if (!confirmacao) return;
+
+    try {
+      await api.post(`/etapas-guincho/${id}/finalizar`, {
+        observacoes_finais: observacaoFinal || null
+      });
+      
+      loadEtapas();
+      loadChamado();
+      loadHistorico();
+      setObservacaoFinal('');
+      
+      showSuccess('🎉 Chamado finalizado!', 'Chamado de assistência finalizado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao finalizar chamado:', error);
+      showError('Erro ao finalizar chamado', 'Tente novamente ou contate o suporte.');
     }
   };
 
@@ -344,7 +388,7 @@ const ChamadoDetalhes = () => {
 
   const handleAtribuirTecnico = async () => {
     if (!tecnicoSelecionado) {
-      alert('Selecione um técnico');
+      showWarning('Seleção obrigatória', 'Selecione um técnico antes de continuar.');
       return;
     }
     try {
@@ -916,6 +960,8 @@ const ChamadoDetalhes = () => {
                           </div>
                         )}
 
+      
+
                         {etapa.observacoes && (
                           <div className="mt-3 p-3 bg-white rounded border border-gray-200">
                             <span className="text-xs text-gray-500 font-semibold">Observações:</span>
@@ -946,6 +992,19 @@ const ChamadoDetalhes = () => {
                               Protocolo obrigatório
                             </p>
                           )}
+                        </div>
+                      )}
+
+                      {/* Botão finalizar para etapa 7 */}
+                      {isEmAndamento && etapa.etapa_numero === 7 && (
+                        <div className="ml-4">
+                          <button
+                            onClick={handleFinalizarChamado}
+                            className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 font-bold text-sm shadow-lg transform hover:scale-105 flex items-center gap-2"
+                            title="Finalizar chamado de assistência"
+                          >
+                            Finalizar Chamado
+                          </button>
                         </div>
                       )}
                     </div>
@@ -1072,6 +1131,26 @@ const ChamadoDetalhes = () => {
           </div>
         </div>
       </div>
+
+      {/* Componentes de Alert e Confirm */}
+      <Alert
+        type={alert.type}
+        title={alert.title}
+        message={alert.message}
+        isOpen={alert.isOpen}
+        onClose={closeAlert}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        title={confirmState.title}
+        message={confirmState.message}
+        type={confirmState.type}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </Layout>
   );
 };

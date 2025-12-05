@@ -212,3 +212,31 @@ export const registrarAtualizacaoEtapa3 = async (req: AuthRequest, res: Response
     res.status(500).json({ message: 'Erro ao registrar atualização' });
   }
 };
+
+export const finalizarChamadoAssistencia = async (req: AuthRequest, res: Response) => {
+  try {
+    const { chamado_id } = req.params;
+    const { observacoes_finais } = req.body;
+
+    // Concluir a última etapa (7)
+    await db.query(
+      `UPDATE etapas_guincho 
+       SET status = 'concluida', data_conclusao = NOW(), observacoes = ?
+       WHERE chamado_id = ? AND etapa_numero = 7`,
+      [observacoes_finais || null, chamado_id]
+    );
+
+    // Finalizar o chamado completamente
+    await db.query(
+      `UPDATE chamados 
+       SET status = 'finalizado', data_conclusao = NOW()
+       WHERE id = ?`,
+      [chamado_id]
+    );
+
+    res.json({ message: 'Chamado de assistência finalizado com sucesso' });
+  } catch (error) {
+    console.error('Erro ao finalizar chamado:', error);
+    res.status(500).json({ message: 'Erro ao finalizar chamado de assistência' });
+  }
+};

@@ -222,7 +222,7 @@ const Chamados = () => {
 
         {chamados.length === 0 && (
           <div className="text-center py-12 bg-white rounded-lg shadow">
-            <p className="text-gray-500">Nenhum chamado encontrado</p>
+            <p className="text-gray-500">Nenhum chamado   encontrado</p>
           </div>
         )}
       </div>

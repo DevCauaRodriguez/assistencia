@@ -38,6 +38,7 @@ const NovoChamadoGuinchoReboque = () => {
     empresa_id: '',
     protocolo_seguradora: '',
     nome_cliente: '',
+    cpf_cnpj_cliente: '',
     telefone_cliente: '',
     cooperativa_cliente: '',
     criancas_menores_12: '',
@@ -304,6 +305,21 @@ const NovoChamadoGuinchoReboque = () => {
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Nome do cliente"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    CPF/CNPJ *
+                  </label>
+                  <input
+                    type="text"
+                    name="cpf_cnpj_cliente"
+                    value={formData.cpf_cnpj_cliente}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="CPF ou CNPJ do cliente"
                     required
                   />
                 </div>

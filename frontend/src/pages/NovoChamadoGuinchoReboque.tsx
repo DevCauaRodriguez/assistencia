@@ -28,6 +28,7 @@ const NovoChamadoGuinchoReboque = () => {
   const [loading, setLoading] = useState(false);
   const [anexos, setAnexos] = useState<File[]>([]);
   const [anexoCRLV, setAnexoCRLV] = useState<File | null>(null);
+  const [anexoCNH, setAnexoCNH] = useState<File | null>(null);
   const [anexosRebocador, setAnexosRebocador] = useState<File[]>([]);
 
   const [formData, setFormData] = useState({
@@ -119,6 +120,16 @@ const NovoChamadoGuinchoReboque = () => {
     setAnexoCRLV(null);
   };
 
+  const handleCNHChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setAnexoCNH(e.target.files[0]);
+    }
+  };
+
+  const removeCNH = () => {
+    setAnexoCNH(null);
+  };
+
   const handleRebocadorFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setAnexosRebocador([...anexosRebocador, ...Array.from(e.target.files)]);
@@ -189,6 +200,22 @@ const NovoChamadoGuinchoReboque = () => {
           });
         } catch (crlvError) {
           console.error('Erro ao fazer upload do CRLV:', crlvError);
+        }
+      }
+
+      // Upload da CNH
+      if (anexoCNH) {
+        try {
+          const formDataCNH = new FormData();
+          formDataCNH.append('arquivo', anexoCNH);
+
+          await api.post(`/chamados/${response.data.id}/anexos`, formDataCNH, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+        } catch (cnhError) {
+          console.error('Erro ao fazer upload da CNH:', cnhError);
         }
       }
 
@@ -309,6 +336,31 @@ const NovoChamadoGuinchoReboque = () => {
                     placeholder="Nome da cooperativa"
                   />
                 </div>
+              </div>
+
+              {/* Upload da CNH */}
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  CNH (Carteira Nacional de Habilitação)
+                </label>
+                <input
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={handleCNHChange}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+                {anexoCNH && (
+                  <div className="mt-3 flex items-center justify-between bg-blue-50 p-3 rounded-lg border border-blue-200">
+                    <span className="text-sm text-gray-700">{anexoCNH.name}</span>
+                    <button
+                      type="button"
+                      onClick={removeCNH}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 

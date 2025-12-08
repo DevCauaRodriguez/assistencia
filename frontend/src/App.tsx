@@ -11,6 +11,7 @@ import NovoChamadoGuinchoReboque from './pages/NovoChamadoGuinchoReboque';
 import Usuarios from './pages/Usuarios';
 import Empresas from './pages/Empresas';
 import Prestadores from './pages/Prestadores';
+import Clientes from './pages/Clientes';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/novo-chamado/guincho-reboque" element={<PrivateRoute><NovoChamadoGuinchoReboque /></PrivateRoute>} />
           <Route path="/novo-chamado/padrao" element={<PrivateRoute><NovoChamadoPadrao /></PrivateRoute>} />
           <Route path="/usuarios" element={<PrivateRoute><Usuarios /></PrivateRoute>} />
+          <Route path="/clientes" element={<PrivateRoute><Clientes /></PrivateRoute>} />
           <Route path="/empresas" element={<PrivateRoute><Empresas /></PrivateRoute>} />
           <Route path="/prestadores" element={<PrivateRoute><Prestadores /></PrivateRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />

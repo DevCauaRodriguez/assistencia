@@ -15,7 +15,9 @@ const NovoChamadoPadrao = () => {
     prioridade: 'media',
     empresa_id: '',
     nome_cliente: '',
+    cpf_cnpj_cliente: '',
     telefone_cliente: '',
+    cooperativa_cliente: '',
     localizacao: '',
     observacoes: ''
   });
@@ -43,6 +45,32 @@ const NovoChamadoPadrao = () => {
 
     try {
       setLoading(true);
+
+      // Auto-save do cliente se não existir
+      if (formData.nome_cliente && formData.cpf_cnpj_cliente && formData.telefone_cliente) {
+        try {
+          // Verificar se cliente já existe
+          const cpfCnpjNumeros = formData.cpf_cnpj_cliente.replace(/\D/g, '');
+          await api.get(`/clientes/by-cpf?cpf_cnpj=${cpfCnpjNumeros}`);
+        } catch (error: any) {
+          // Cliente não existe, criar automaticamente
+          if (error.response?.status === 404) {
+            try {
+              await api.post('/clientes', {
+                nome: formData.nome_cliente,
+                cpf_cnpj: formData.cpf_cnpj_cliente.replace(/\D/g, ''),
+                telefone: formData.telefone_cliente.replace(/\D/g, ''),
+                cooperativa: formData.cooperativa_cliente || null
+              });
+              console.log('Cliente criado automaticamente com sucesso');
+            } catch (createError) {
+              console.error('Erro ao criar cliente automaticamente:', createError);
+              // Continuar mesmo se falhar a criação do cliente
+            }
+          }
+        }
+      }
+
       const response = await api.post('/chamados', {
         categoria_id,
         ...formData
@@ -156,6 +184,22 @@ const NovoChamadoPadrao = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
+                  CPF/CNPJ
+                </label>
+                <input
+                  type="text"
+                  name="cpf_cnpj_cliente"
+                  value={formData.cpf_cnpj_cliente}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="CPF ou CNPJ"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Telefone do Cliente
                 </label>
                 <input
@@ -165,6 +209,20 @@ const NovoChamadoPadrao = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="(00) 00000-0000"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Cooperativa
+                </label>
+                <input
+                  type="text"
+                  name="cooperativa_cliente"
+                  value={formData.cooperativa_cliente}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Nome da cooperativa"
                 />
               </div>
             </div>

@@ -10,6 +10,7 @@ import prestadorRoutes from './routes/prestadorRoutes';
 import etapaGuinchoRoutes from './routes/etapaGuinchoRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
 import anexoRoutes from './routes/anexoRoutes';
+import clienteRoutes from './routes/clienteRoutes';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use('/api/empresas', empresaRoutes);
 app.use('/api/prestadores', prestadorRoutes);
 app.use('/api/etapas-guincho', etapaGuinchoRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/clientes', clienteRoutes);
 app.use('/api', anexoRoutes);
 
 // Rota de teste

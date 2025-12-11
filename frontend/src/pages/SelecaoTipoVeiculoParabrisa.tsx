@@ -83,21 +83,21 @@ const SelecaoTipoVeiculoParabrisa = () => {
               {/* Rebocador/Truck */}
               <button
                 type="button"
-                onClick={() => setTipoSelecionado('rebocador_truck')}
+                onClick={() => setTipoSelecionado('truck')}
                 className={`p-8 border-2 rounded-xl transition-all duration-200 text-left ${
-                  tipoSelecionado === 'rebocador_truck'
+                  tipoSelecionado === 'truck'
                     ? 'border-blue-600 bg-blue-50 shadow-lg scale-105'
                     : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
                 }`}
               >
                 <div className="flex flex-col items-center text-center">
                   <div className={`p-4 rounded-full mb-4 ${
-                    tipoSelecionado === 'rebocador_truck' 
+                    tipoSelecionado === 'truck' 
                       ? 'bg-blue-100' 
                       : 'bg-gray-100'
                   }`}>
                     <Truck size={48} className={
-                      tipoSelecionado === 'rebocador_truck' 
+                      tipoSelecionado === 'truck' 
                         ? 'text-blue-600' 
                         : 'text-gray-600'
                     } />

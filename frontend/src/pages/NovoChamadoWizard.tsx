@@ -45,6 +45,11 @@ const NovoChamadoWizard = () => {
       navigate('/novo-chamado/selecao-tipo-veiculo', { 
         state: { categoria_id: parseInt(categoriaSelecionada) } 
       });
+    } else if (categoriaObj?.nome.toLowerCase().includes('parabrisa') ||
+               categoriaObj?.nome.toLowerCase().includes('para-brisa')) {
+      navigate('/novo-chamado/selecao-tipo-veiculo-parabrisa', { 
+        state: { categoria_id: parseInt(categoriaSelecionada) } 
+      });
     } else {
       navigate('/novo-chamado/padrao', { 
         state: { categoria_id: parseInt(categoriaSelecionada) } 

@@ -42,6 +42,7 @@ const NovoChamadoParabrisa = () => {
     marca_veiculo: '',
     modelo_veiculo: '',
     placa_veiculo: '',
+    cor_veiculo: '',
     tipo_veiculo: tipo_veiculo_inicial,
     data_hora_atendimento: '',
     vidro_danificado: '',
@@ -324,6 +325,21 @@ const NovoChamadoParabrisa = () => {
                     required
                   />
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cor do Veículo *
+                  </label>
+                  <input
+                    type="text"
+                    name="cor_veiculo"
+                    value={formData.cor_veiculo}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Ex: Preto, Branco, Prata"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
@@ -333,7 +349,7 @@ const NovoChamadoParabrisa = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Data e Hora do Atendimento *
+                    Data e Hora do Acontecido *
                   </label>
                   <input
                     type="datetime-local"
@@ -410,6 +426,32 @@ const NovoChamadoParabrisa = () => {
                 </div>
               </div>
             </div>
+
+            {/* Informações Específicas - Rebocador/Truck */}
+            {formData.tipo_veiculo === 'truck' && (
+              <div className="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Informações Específicas - Rebocador/Truck</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Qual Vidro Danificado? *
+                    </label>
+                    <select
+                      name="vidro_danificado"
+                      value={formData.vidro_danificado}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    >
+                      <option value="">Selecione...</option>
+                      <option value="vidro_dianteiro_esquerdo">Vidro Dianteiro Esquerdo</option>
+                      <option value="vidro_dianteiro_direito">Vidro Dianteiro Direito</option>
+                      <option value="parabrisa">Para-brisa</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Informações Específicas - Veículo de Passeio */}
             {formData.tipo_veiculo === 'passeio' && (

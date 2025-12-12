@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, X, Building2 } from 'lucide-react';
-import Layout from '../components/Layout';
-import api from '../lib/api';
-import { useAuth } from '../contexts/AuthContext';
+import Layout from '../../components/Layout';
+import api from '../../lib/api';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface Empresa {
   id: number;
@@ -151,10 +151,10 @@ const Empresas = () => {
             <div className="p-2 bg-blue-100 rounded-lg">
               <Building2 className="text-blue-600" size={28} />
             </div>
-            Empresas/Seguradoras
+            Seguradoras
           </h1>
           <p className="text-sm text-gray-500 mt-2">
-            Gerencie as empresas e seguradoras cadastradas no sistema
+            Gerencie as seguradoras cadastradas no sistema
           </p>
         </div>
         <button
@@ -162,7 +162,7 @@ const Empresas = () => {
           className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
         >
           <Plus size={20} />
-          Nova Empresa
+          Nova Seguradora
         </button>
       </div>
 
@@ -171,7 +171,7 @@ const Empresas = () => {
         <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500 font-medium">Total de Empresas</p>
+              <p className="text-sm text-gray-500 font-medium">Total de Seguradoras</p>
               <p className="text-3xl font-bold text-gray-900 mt-1">{empresas.length}</p>
             </div>
             <div className="p-3 bg-blue-50 rounded-lg">
@@ -182,7 +182,7 @@ const Empresas = () => {
         <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500 font-medium">Empresas Ativas</p>
+              <p className="text-sm text-gray-500 font-medium">Seguradoras Ativas</p>
               <p className="text-3xl font-bold text-green-600 mt-1">
                 {empresas.filter(e => e.ativo).length}
               </p>
@@ -195,7 +195,7 @@ const Empresas = () => {
         <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500 font-medium">Empresas Inativas</p>
+              <p className="text-sm text-gray-500 font-medium">Seguradoras Inativas</p>
               <p className="text-3xl font-bold text-gray-400 mt-1">
                 {empresas.filter(e => !e.ativo).length}
               </p>
@@ -297,8 +297,8 @@ const Empresas = () => {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
               <Building2 className="text-gray-400" size={32} />
             </div>
-            <p className="text-gray-500 font-medium">Nenhuma empresa cadastrada</p>
-            <p className="text-sm text-gray-400 mt-1">Clique em "Nova Empresa" para adicionar</p>
+            <p className="text-gray-500 font-medium">Nenhuma seguradora cadastrada</p>
+            <p className="text-sm text-gray-400 mt-1">Clique em "Nova Seguradora" para adicionar</p>
           </div>
         )}
       </div>
@@ -331,7 +331,7 @@ const Empresas = () => {
             <form onSubmit={handleSubmit} className="p-6 space-y-5">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Nome da Empresa <span className="text-red-500">*</span>
+                  Nome da Seguradora <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"

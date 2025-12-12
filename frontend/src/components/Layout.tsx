@@ -20,7 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
   const menuItems = [
     { icon: Home, label: 'Página Inicial', path: '/' },
     { icon: FileText, label: 'Chamados', path: '/chamados' },
-    { icon: Users, label: 'Clientes', path: '/clientes' },
+    { icon: Users, label: 'Solicitantes', path: '/solicitantes' },
     { icon: Building2, label: 'Seguradoras', path: '/seguradoras' },
     { icon: Truck, label: 'Prestadores', path: '/prestadores' }
   ];

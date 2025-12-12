@@ -11,7 +11,7 @@ import NovoChamadoGuinchoReboque from './pages/NovoChamadoGuinchoReboque';
 import SelecaoTipoVeiculoParabrisa from './pages/SelecaoTipoVeiculoParabrisa';
 import NovoChamadoParabrisa from './pages/NovoChamadoParabrisa';
 import Usuarios from './pages/Usuarios';
-import Empresas from './pages/Empresas';
+import Empresas from './pages/seguradora/Seguradoras';
 import Prestadores from './pages/Prestadores';
 import Clientes from './pages/Clientes';
 import PrivateRoute from './components/PrivateRoute';
@@ -33,7 +33,7 @@ function App() {
           <Route path="/novo-chamado/parabrisa" element={<PrivateRoute><NovoChamadoParabrisa /></PrivateRoute>} />
           <Route path="/usuarios" element={<PrivateRoute><Usuarios /></PrivateRoute>} />
           <Route path="/clientes" element={<PrivateRoute><Clientes /></PrivateRoute>} />
-          <Route path="/empresas" element={<PrivateRoute><Empresas /></PrivateRoute>} />
+          <Route path="/seguradoras" element={<PrivateRoute><Empresas /></PrivateRoute>} />
           <Route path="/prestadores" element={<PrivateRoute><Prestadores /></PrivateRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, X, Users } from 'lucide-react';
-import Layout from '../components/Layout';
-import api from '../lib/api';
-import { useAuth } from '../contexts/AuthContext';
+import Layout from '../../components/Layout';
+import api from '../../lib/api';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface Cliente {
   id: number;
@@ -141,10 +141,10 @@ const Clientes = () => {
               <div className="p-2 bg-blue-100 rounded-lg">
                 <Users className="text-blue-600" size={28} />
               </div>
-              Clientes
+              Solicitantes
             </h1>
             <p className="text-sm text-gray-500 mt-2">
-              Gerencie os clientes cadastrados no sistema
+              Gerencie os solicitantes cadastrados no sistema
             </p>
           </div>
           <button
@@ -152,7 +152,7 @@ const Clientes = () => {
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
           >
             <Plus size={20} />
-            Novo Cliente
+            Novo solicitante
           </button>
         </div>
 
@@ -161,7 +161,7 @@ const Clientes = () => {
           <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500 font-medium">Total de Clientes</p>
+                <p className="text-sm text-gray-500 font-medium">Total de solicitantes</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{clientes.length}</p>
               </div>
               <div className="p-3 bg-blue-50 rounded-lg">
@@ -172,7 +172,7 @@ const Clientes = () => {
           <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500 font-medium">Clientes Ativos</p>
+                <p className="text-sm text-gray-500 font-medium">Solicitantes Ativos</p>
                 <p className="text-3xl font-bold text-green-600 mt-1">
                   {clientes.filter(c => c.ativo).length}
                 </p>
@@ -185,7 +185,7 @@ const Clientes = () => {
           <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500 font-medium">Clientes Inativos</p>
+                <p className="text-sm text-gray-500 font-medium">Solicitantes Inativos</p>
                 <p className="text-3xl font-bold text-gray-400 mt-1">
                   {clientes.filter(c => !c.ativo).length}
                 </p>
@@ -290,7 +290,7 @@ const Clientes = () => {
             <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <h2 className="text-lg font-bold text-gray-900">
-                  {editando ? 'Editar Cliente' : 'Novo Cliente'}
+                  {editando ? 'Editar Cliente' : 'Novo Solicitante'}
                 </h2>
                 <button
                   onClick={handleCloseModal}

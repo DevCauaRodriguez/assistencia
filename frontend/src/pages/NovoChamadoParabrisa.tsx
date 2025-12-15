@@ -112,25 +112,25 @@ const NovoChamadoParabrisa = () => {
     setLoading(true);
 
     try {
-      // Auto-save do cliente se não existir
+      // Auto-save do solicitante se não existir
       if (formData.nome_cliente && formData.cpf_cnpj_cliente && formData.telefone_cliente) {
         try {
-          // Verificar se cliente já existe
+          // Verificar se solicitante já existe
           const cpfCnpjNumeros = formData.cpf_cnpj_cliente.replace(/\D/g, '');
-          await api.get(`/clientes/by-cpf?cpf_cnpj=${cpfCnpjNumeros}`);
+          await api.get(`/solicitantes/by-cpf?cpf_cnpj=${cpfCnpjNumeros}`);
         } catch (error: any) {
-          // Cliente não existe, criar automaticamente
+          // Solicitante não existe, criar automaticamente
           if (error.response?.status === 404) {
             try {
-              await api.post('/clientes', {
+              await api.post('/solicitantes', {
                 nome: formData.nome_cliente,
                 cpf_cnpj: formData.cpf_cnpj_cliente.replace(/\D/g, ''),
                 telefone: formData.telefone_cliente.replace(/\D/g, ''),
                 cooperativa: formData.cooperativa_cliente || null
               });
-              console.log('Cliente criado automaticamente com sucesso');
+              console.log('Solicitante criado automaticamente com sucesso');
             } catch (createError) {
-              console.error('Erro ao criar cliente automaticamente:', createError);
+              console.error('Erro ao criar solicitante automaticamente:', createError);
             }
           }
         }

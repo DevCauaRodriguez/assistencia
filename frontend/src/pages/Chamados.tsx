@@ -135,7 +135,7 @@ const Chamados = () => {
               </div>
               
               <div className="space-y-1 text-sm text-gray-600 mb-3">
-                <div>Cliente: {chamado.nome_cliente}</div>
+                <div>Solicitante: {chamado.nome_cliente}</div>
                 <div>Categoria: {chamado.categoria_nome}</div>
                 {chamado.tecnico_nome && <div>Técnico: {chamado.tecnico_nome}</div>}
                 <div>Abertura: {formatDate(chamado.data_abertura)}</div>
@@ -160,7 +160,7 @@ const Chamados = () => {
                   Título
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Cliente
+                  Solicitante
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Categoria

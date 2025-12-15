@@ -4,7 +4,7 @@ import Layout from '../../components/Layout';
 import api from '../../lib/api';
 import { useAuth } from '../../contexts/AuthContext';
 
-interface Cliente {
+interface Solicitante {
   id: number;
   nome: string;
   cpf_cnpj: string;
@@ -13,12 +13,12 @@ interface Cliente {
   ativo: boolean;
 }
 
-const Clientes = () => {
+const Solicitantes = () => {
   const { user } = useAuth();
-  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [solicitantes, setSolicitantes] = useState<Solicitante[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [editando, setEditando] = useState<Cliente | null>(null);
+  const [editando, setEditando] = useState<Solicitante | null>(null);
   const [formData, setFormData] = useState({
     nome: '',
     cpf_cnpj: '',
@@ -27,15 +27,15 @@ const Clientes = () => {
   });
 
   useEffect(() => {
-    loadClientes();
+    loadSolicitantes();
   }, []);
 
-  const loadClientes = async () => {
+  const loadSolicitantes = async () => {
     try {
-      const response = await api.get('/clientes');
-      setClientes(response.data);
+      const response = await api.get('/solicitantes');
+      setSolicitantes(response.data);
     } catch (error) {
-      console.error('Erro ao carregar clientes:', error);
+      console.error('Erro ao carregar solicitantes:', error);
     } finally {
       setLoading(false);
     }
@@ -45,38 +45,38 @@ const Clientes = () => {
     e.preventDefault();
     try {
       if (editando) {
-        await api.put(`/clientes/${editando.id}`, {
+        await api.put(`/solicitantes/${editando.id}`, {
           ...formData,
           ativo: editando.ativo
         });
       } else {
-        await api.post('/clientes', formData);
+        await api.post('/solicitantes', formData);
       }
-      loadClientes();
+      loadSolicitantes();
       handleCloseModal();
     } catch (error) {
-      console.error('Erro ao salvar cliente:', error);
+      console.error('Erro ao salvar solicitante:', error);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm('Deseja realmente desativar este cliente?')) {
+    if (window.confirm('Deseja realmente desativar este solicitante?')) {
       try {
-        await api.delete(`/clientes/${id}`);
-        loadClientes();
+        await api.delete(`/solicitantes/${id}`);
+        loadSolicitantes();
       } catch (error) {
         console.error('Erro ao desativar cliente:', error);
       }
     }
   };
 
-  const handleEdit = (cliente: Cliente) => {
-    setEditando(cliente);
+  const handleEdit = (solicitante: Solicitante) => {
+    setEditando(solicitante);
     setFormData({
-      nome: cliente.nome,
-      cpf_cnpj: cliente.cpf_cnpj,
-      telefone: cliente.telefone,
-      cooperativa: cliente.cooperativa || ''
+      nome: solicitante.nome,
+      cpf_cnpj: solicitante.cpf_cnpj,
+      telefone: solicitante.telefone,
+      cooperativa: solicitante.cooperativa || ''
     });
     setShowModal(true);
   };
@@ -162,7 +162,7 @@ const Clientes = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-500 font-medium">Total de solicitantes</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{clientes.length}</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1">{solicitantes.length}</p>
               </div>
               <div className="p-3 bg-blue-50 rounded-lg">
                 <Users className="text-blue-600" size={24} />
@@ -174,7 +174,7 @@ const Clientes = () => {
               <div>
                 <p className="text-sm text-gray-500 font-medium">Solicitantes Ativos</p>
                 <p className="text-3xl font-bold text-green-600 mt-1">
-                  {clientes.filter(c => c.ativo).length}
+                  {solicitantes.filter(c => c.ativo).length}
                 </p>
               </div>
               <div className="p-3 bg-green-50 rounded-lg">
@@ -187,7 +187,7 @@ const Clientes = () => {
               <div>
                 <p className="text-sm text-gray-500 font-medium">Solicitantes Inativos</p>
                 <p className="text-3xl font-bold text-gray-400 mt-1">
-                  {clientes.filter(c => !c.ativo).length}
+                  {solicitantes.filter(c => !c.ativo).length}
                 </p>
               </div>
               <div className="p-3 bg-gray-50 rounded-lg">
@@ -224,54 +224,54 @@ const Clientes = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
-                {clientes.map((cliente) => (
-                  <tr key={cliente.id} className="hover:bg-blue-50/30 transition-colors duration-150">
+                {solicitantes.map((solicitante) => (
+                  <tr key={solicitante.id} className="hover:bg-blue-50/30 transition-colors duration-150">
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg ${cliente.ativo ? 'bg-blue-100' : 'bg-gray-100'}`}>
-                          <Users className={cliente.ativo ? 'text-blue-600' : 'text-gray-400'} size={20} />
+                        <div className={`p-2 rounded-lg ${solicitante.ativo ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                          <Users className={solicitante.ativo ? 'text-blue-600' : 'text-gray-400'} size={20} />
                         </div>
                         <div>
-                          <div className="text-sm font-semibold text-gray-900">{cliente.nome}</div>
-                          <div className="md:hidden text-xs text-gray-500 mt-1">{formatCPFCNPJ(cliente.cpf_cnpj)}</div>
+                          <div className="text-sm font-semibold text-gray-900">{solicitante.nome}</div>
+                          <div className="md:hidden text-xs text-gray-500 mt-1">{formatCPFCNPJ(solicitante.cpf_cnpj)}</div>
                         </div>
                       </div>
                     </td>
                     <td className="hidden md:table-cell px-6 py-5">
-                      <div className="text-sm text-gray-700">{formatCPFCNPJ(cliente.cpf_cnpj)}</div>
+                      <div className="text-sm text-gray-700">{formatCPFCNPJ(solicitante.cpf_cnpj)}</div>
                     </td>
                     <td className="hidden lg:table-cell px-6 py-5">
-                      <div className="text-sm text-gray-700">{formatTelefone(cliente.telefone)}</div>
+                      <div className="text-sm text-gray-700">{formatTelefone(solicitante.telefone)}</div>
                     </td>
                     <td className="hidden lg:table-cell px-6 py-5">
-                      <div className="text-sm text-gray-700">{cliente.cooperativa || '-'}</div>
+                      <div className="text-sm text-gray-700">{solicitante.cooperativa || '-'}</div>
                     </td>
                     <td className="px-6 py-5">
                       <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                          cliente.ativo
+                          solicitante.ativo
                             ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'
                         }`}
                       >
-                        {cliente.ativo ? 'Ativo' : 'Inativo'}
+                        {solicitante.ativo ? 'Ativo' : 'Inativo'}
                       </span>
                     </td>
                     <td className="px-6 py-5">
                       <div className="flex justify-end items-center gap-3">
-                        {cliente.ativo && (
+                        {solicitante.ativo && (
                           <button
-                            onClick={() => handleEdit(cliente)}
+                            onClick={() => handleEdit(solicitante)}
                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-150"
-                            title="Editar cliente"
+                            title="Editar solicitante"
                           >
                             <Pencil size={18} />
                           </button>
                         )}
                         <button
-                          onClick={() => handleDelete(cliente.id)}
+                          onClick={() => handleDelete(solicitante.id)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-150"
-                          title="Desativar cliente"
+                          title="Desativar solicitante"
                         >
                           <Trash2 size={18} />
                         </button>
@@ -290,7 +290,7 @@ const Clientes = () => {
             <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <h2 className="text-lg font-bold text-gray-900">
-                  {editando ? 'Editar Cliente' : 'Novo Solicitante'}
+                  {editando ? 'Editar Solicitante' : 'Novo Solicitante'}
                 </h2>
                 <button
                   onClick={handleCloseModal}
@@ -310,7 +310,7 @@ const Clientes = () => {
                     value={formData.nome}
                     onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Nome do cliente"
+                    placeholder="Nome do solicitante"
                     required
                   />
                 </div>
@@ -380,4 +380,4 @@ const Clientes = () => {
   );
 };
 
-export default Clientes;
+export default Solicitantes;

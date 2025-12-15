@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import Layout from '../components/Layout';
-import api from '../lib/api';
+import Layout from '../../components/Layout';
+import api from '../../lib/api';
 import { Plus, Edit2, CheckCircle, XCircle } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface Usuario {
   id: number;

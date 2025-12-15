@@ -538,9 +538,9 @@ const ChamadoDetalhes = () => {
             </div>
           </div>
 
-          {/* Dados do Cliente */}
+          {/* Dados do Solicitante */}
           <div className="mb-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b">Dados do Cliente</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b">Dados do Solicitante</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <div className="text-sm text-gray-500 mb-1">Nome Completo</div>

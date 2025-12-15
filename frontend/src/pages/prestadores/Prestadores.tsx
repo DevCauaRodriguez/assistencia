@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, X, Truck } from 'lucide-react';
-import Layout from '../components/Layout';
-import api from '../lib/api';
-import { useAuth } from '../contexts/AuthContext';
+import Layout from '../../components/Layout';
+import api from '../../lib/api';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface Prestador {
   id: number;

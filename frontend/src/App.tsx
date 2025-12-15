@@ -10,9 +10,9 @@ import NovoChamadoPadrao from './pages/chamado/NovoChamadoPadrao';
 import NovoChamadoGuinchoReboque from './pages/NovoChamadoGuinchoReboque';
 import SelecaoTipoVeiculoParabrisa from './pages/SelecaoTipoVeiculoParabrisa';
 import NovoChamadoParabrisa from './pages/NovoChamadoParabrisa';
-import Usuarios from './pages/Usuarios';
+import Usuarios from './pages/usuarios/Usuarios';
 import Empresas from './pages/seguradora/Seguradoras';
-import Prestadores from './pages/Prestadores';
+import Prestadores from './pages/prestadores/Prestadores';
 import Clientes from './pages/solicitantes/Solicitantes';
 import PrivateRoute from './components/PrivateRoute';
 

@@ -317,7 +317,7 @@ const NovoChamadoGuinchoReboque = () => {
 
             {/* Dados do Cliente */}
             <div className="bg-gray-50 p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Dados do Cliente</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Dados do Solicitante</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -366,7 +366,7 @@ const NovoChamadoGuinchoReboque = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Cooperativa
+                    Cliente/Cooperativa
                   </label>
                   <input
                     type="text"
@@ -374,7 +374,7 @@ const NovoChamadoGuinchoReboque = () => {
                     value={formData.cooperativa_cliente}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Nome da cooperativa"
+                    placeholder="Nome do cliente/cooperativa"
                   />
                 </div>
               </div>

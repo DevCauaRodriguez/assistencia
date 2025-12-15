@@ -6,7 +6,7 @@ import Chamados from './pages/Chamados';
 import ChamadoDetalhes from './pages/ChamadoDetalhes';
 import NovoChamadoWizard from './pages/NovoChamadoWizard';
 import SelecaoTipoVeiculo from './pages/SelecaoTipoVeiculo';
-import NovoChamadoPadrao from './pages/NovoChamadoPadrao';
+import NovoChamadoPadrao from './pages/chamado/NovoChamadoPadrao';
 import NovoChamadoGuinchoReboque from './pages/NovoChamadoGuinchoReboque';
 import SelecaoTipoVeiculoParabrisa from './pages/SelecaoTipoVeiculoParabrisa';
 import NovoChamadoParabrisa from './pages/NovoChamadoParabrisa';

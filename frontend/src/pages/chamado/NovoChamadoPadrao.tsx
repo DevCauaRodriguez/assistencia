@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Layout from '../components/Layout';
-import api from '../lib/api';
+import Layout from '../../components/Layout';
+import api from '../../lib/api';
 import { ArrowLeft, Save } from 'lucide-react';
 
 const NovoChamadoPadrao = () => {

@@ -172,9 +172,7 @@ const NovoChamadoParabrisa = () => {
   };
 
   const handleBack = () => {
-    navigate('/novo-chamado/selecao-tipo-veiculo-parabrisa', { 
-      state: { categoria_id } 
-    });
+    navigate('/novo-chamado');
   };
 
   return (

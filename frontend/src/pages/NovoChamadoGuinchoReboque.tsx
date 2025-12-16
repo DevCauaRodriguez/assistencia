@@ -274,9 +274,7 @@ const NovoChamadoGuinchoReboque = () => {
   };
 
   const handleBack = () => {
-    navigate('/novo-chamado/selecao-tipo-veiculo', { 
-      state: { categoria_id } 
-    });
+    navigate('/novo-chamado');
   };
 
   return (

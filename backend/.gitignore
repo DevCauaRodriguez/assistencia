@@ -2,5 +2,6 @@ node_modules
 dist
 .env
 *.log
-database/
+database/*
+!database/schema.sql
 uploads/

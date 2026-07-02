@@ -1,0 +1,65 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: assistencia_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-assistencia_auto}
+      MYSQL_USER: ${MYSQL_USER:-assistencia}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-assistencia123}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Executa o schema apenas na primeira inicialização (volume vazio)
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD:-root123}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./backend
+    container_name: assistencia_backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PORT: 3001
+      NODE_ENV: development
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: ${MYSQL_USER:-assistencia}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-assistencia123}
+      DB_NAME: ${MYSQL_DATABASE:-assistencia_auto}
+      JWT_SECRET: ${JWT_SECRET:-troque_esta_chave}
+      FRONTEND_URL: http://localhost:${FRONTEND_PORT:-3000}
+    ports:
+      - "${BACKEND_PORT:-3001}:3001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: assistencia_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      # O proxy do Vite (server-side) fala com o backend pela rede do Compose
+      VITE_API_PROXY_TARGET: http://backend:3001
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  mysql_data:

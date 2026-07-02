@@ -84,7 +84,38 @@ cd ..
 npm install
 ```
 
-## ▶️ Executar o Projeto
+## 🐳 Executar com Docker (recomendado — Ubuntu/Linux)
+
+Sobe MySQL + Backend + Frontend com um único comando. Requer Docker e Docker Compose.
+
+```bash
+# 1. (opcional) ajuste credenciais/segredos
+cp .env.example .env
+
+# 2. suba todo o ambiente
+docker compose up --build
+```
+
+Acesse:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:3001/api/health
+- MySQL: localhost:3306
+
+O schema (`backend/database/schema.sql`) é aplicado automaticamente na **primeira** subida do MySQL,
+criando as tabelas, dados iniciais e o usuário admin (admin@assistencia.com / admin123).
+
+```bash
+docker compose down       # parar
+docker compose down -v     # parar e ZERAR o banco (reaplica o schema na próxima subida)
+docker compose logs -f backend   # ver logs do backend
+```
+
+> O código de `backend/` e `frontend/` é montado nos containers, então alterações
+> disparam hot reload sem rebuild.
+
+## ▶️ Executar o Projeto (sem Docker)
+
+> Rodando localmente sem Docker, ajuste `backend/.env` com `DB_HOST=localhost`.
 
 ### Opção 1: Executar tudo de uma vez (da raiz)
 ```bash
